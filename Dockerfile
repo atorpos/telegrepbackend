@@ -7,13 +7,16 @@ WORKDIR /usr/src/app
 
 # Install dependencies first (for better caching)
 COPY package*.json ./
-RUN npm install --production
+RUN npm ci --omit=dev
 
 # Copy rest of the application code
 COPY . .
+
+# Set production env
+ENV NODE_ENV=production
 
 # Expose the port your app runs on
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "app.js"]
+CMD ["npm", "start"]

@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 const phoneController = require('../controllers/phoneController');
+const verifyToken = require('../middleware/auth');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-// POST endpoint to receive phone number and additional info
-router.post('/phone', async function(req, res, next) {
+// POST endpoint to receive phone number and additional info (protected)
+router.post('/phone', verifyToken, async function(req, res, next) {
   const { phone, time, ip, deviceType } = req.body;
 
   if (!phone || !time || !ip || !deviceType) {

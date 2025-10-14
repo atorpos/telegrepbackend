@@ -102,3 +102,25 @@ curl -X POST http://localhost:3000/phone \
     "deviceType": "Android"
   }'
 ```
+
+## Authentication (JWT)
+This API uses JWT to protect write endpoints. A token is required for protected routes like POST /phone.
+
+### Setup
+- Create a .env file (see .env.example) and set at least:
+  - JWT_SECRET to a long random string
+  - Either AUTH_API_KEY or AUTH_USERNAME + AUTH_PASSWORD to control token issuance
+- Start the server (locally or with Docker)
+
+### Issue a token
+- Option A: Send header x-api-key that matches AUTH_API_KEY to POST /auth/token
+- Option B: Send JSON body { "username": "...", "password": "..." } that matches AUTH_USERNAME/AUTH_PASSWORD to POST /auth/token
+- Response: { success: true, token: "...", expiresIn: "..." }
+
+### Call a protected endpoint
+- Include header Authorization: Bearer <token>
+- Example: POST /phone with JSON body { phone, time, ip, deviceType }
+
+### Protect more routes
+- Use middleware from middleware/auth.js
+- Example: router.get('/secure', require('../middleware/auth'), handler)
